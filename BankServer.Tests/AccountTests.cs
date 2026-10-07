@@ -1,3 +1,4 @@
+using AwesomeAssertions;
 using BankServer.Model;
 
 namespace BankServer.Tests
@@ -14,7 +15,7 @@ namespace BankServer.Tests
             // Act – nothing to do: construction is the behavior
 
             // Assert
-            Assert.Equal(ZeroBalance, sut.Balance);
+            sut.Balance.Should().Be(ZeroBalance);
         }
 
         [Theory]
@@ -32,7 +33,7 @@ namespace BankServer.Tests
             sut.Name = input;
 
             // Assert
-            Assert.Equal(expected, sut.Name);
+            sut.Name.Should().Be(expected);
         }
 
         public static TheoryData<decimal> PositiveAmounts => new()
@@ -40,7 +41,7 @@ namespace BankServer.Tests
             0.01m, 100m, 1_000_000_000m
         };
 
-        [Theory]
+    [Theory]
         [MemberData(nameof(PositiveAmounts))]
         public void Credit_PositiveAmount_IncreasesBalance(decimal amount)
         {
@@ -51,7 +52,7 @@ namespace BankServer.Tests
             sut.Credit(amount);
 
             // Assert
-            Assert.Equal(amount, sut.Balance);
+            sut.Balance.Should().Be(amount);
         }
 
         [Fact]
@@ -61,8 +62,11 @@ namespace BankServer.Tests
             const decimal NegativeAmount = -1m;
             var sut = new Account();
 
-            // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Credit(NegativeAmount));
+            // Act
+            Action act = () => sut.Credit(NegativeAmount);
+
+            // Assert
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         public static TheoryData<decimal> NonPositiveAmounts => new()
@@ -77,8 +81,11 @@ namespace BankServer.Tests
             // Arrange
             var sut = new Account();
 
-            // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Credit(amount));
+            // Act
+            Action act = () => sut.Credit(amount);
+
+            // Assert
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Fact]
@@ -92,7 +99,7 @@ namespace BankServer.Tests
             sut.Charge(Amount);
 
             // Assert
-            Assert.Equal(-Amount, sut.Balance);
+            sut.Balance.Should().Be(-Amount);
         }
 
         [Fact]
@@ -102,8 +109,11 @@ namespace BankServer.Tests
             const decimal NegativeAmount = -1m;
             var sut = new Account();
 
-            // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => sut.Charge(NegativeAmount));
+            // Act
+            Action act = () => sut.Charge(NegativeAmount);
+
+            // Assert
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
 
         // Nobody defined what Credit should do when the balance would overflow.
@@ -116,12 +126,15 @@ namespace BankServer.Tests
             var sut = new Account();
             sut.Credit(decimal.MaxValue);
 
-            // Act & Assert
-            Assert.Throws<OverflowException>(() => sut.Credit(decimal.MaxValue));
+            // Act
+            Action act = () => sut.Credit(decimal.MaxValue);
+
+            // Assert
+            act.Should().Throw<OverflowException>();
         }
 
-        // For the demo: the expectation here is deliberately wrong, and Assert.True
-        // can't tell you that. Run it and read the failure message.
+        // For the demo: the expectation here is deliberately wrong.
+        // Run it and compare the failure message with phase 3's Assert.True.
         [Fact]
         public void Credit_TwoAmounts_BalanceIsTheirSum()
         {
@@ -136,7 +149,7 @@ namespace BankServer.Tests
             sut.Credit(SecondAmount);
 
             // Assert
-            Assert.True(sut.Balance == ExpectedBalance);
+            sut.Balance.Should().Be(ExpectedBalance);
         }
     }
 }

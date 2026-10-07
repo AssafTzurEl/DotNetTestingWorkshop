@@ -19,3 +19,7 @@ Each phase is a tag. To see a phase, check it out – for example `git switch --
 - Test multiple values using `[Theory]` with `[InlineData]` and `[MemberData]`
 - A test that finds a missing requirement (what happens on overflow?)
 - An assertion that tells you nothing
+
+## phase-4
+
+- Replace xUnit's `Assert` with Awesome Assertions (readable assertions, readable failure messages)

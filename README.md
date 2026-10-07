@@ -8,3 +8,7 @@ Each phase is a tag. To see a phase, check it out – for example `git switch --
 
 - Basic ASP.NET Core project
 - Bank account management functionality
+
+## phase-2
+
+- Basic unit testing (and a discovered bug!)

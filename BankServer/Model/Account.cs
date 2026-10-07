@@ -6,7 +6,11 @@ namespace BankServer.Model
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } = "";
+        public string Name
+        {
+            get => _name;
+            set => _name = value?.Trim() ?? "";
+        }
 
         public decimal Balance => _balance;
 
@@ -39,7 +43,7 @@ namespace BankServer.Model
                     throw new AccountBlockedException(Id);
                 }
 
-                _balance += amount;
+                _balance -= amount;
 
                 return _balance;
             }
@@ -56,6 +60,7 @@ namespace BankServer.Model
         private const decimal BlockingThreshold = -5000m;
 
         private readonly object _lock = new();
+        private string _name = "";
         private decimal _balance;
     }
 }

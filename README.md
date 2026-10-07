@@ -12,3 +12,10 @@ Each phase is a tag. To see a phase, check it out – for example `git switch --
 ## phase-2
 
 - Basic unit testing (and a discovered bug!)
+
+## phase-3
+
+- Fix the bug found in phase 2
+- Test multiple values using `[Theory]` with `[InlineData]` and `[MemberData]`
+- A test that finds a missing requirement (what happens on overflow?)
+- An assertion that tells you nothing

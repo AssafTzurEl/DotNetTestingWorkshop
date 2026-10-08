@@ -23,3 +23,8 @@ Each phase is a tag. To see a phase, check it out – for example `git switch --
 ## phase-4
 
 - Replace xUnit's `Assert` with Awesome Assertions (readable assertions, readable failure messages)
+
+## phase-5
+
+- Unit tests for `AccountService`
+- Shared setup: from repeated Arrange, through constructor + `IDisposable`, to a `CreateSut()` helper

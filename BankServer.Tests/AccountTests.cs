@@ -41,7 +41,7 @@ namespace BankServer.Tests
             0.01m, 100m, 1_000_000_000m
         };
 
-    [Theory]
+        [Theory]
         [MemberData(nameof(PositiveAmounts))]
         public void Credit_PositiveAmount_IncreasesBalance(decimal amount)
         {
@@ -133,15 +133,13 @@ namespace BankServer.Tests
             act.Should().Throw<OverflowException>();
         }
 
-        // For the demo: the expectation here is deliberately wrong.
-        // Run it and compare the failure message with phase 3's Assert.True.
         [Fact]
         public void Credit_TwoAmounts_BalanceIsTheirSum()
         {
             // Arrange
             const decimal FirstAmount = 100m;
             const decimal SecondAmount = 50m;
-            const decimal ExpectedBalance = 200m;
+            const decimal ExpectedBalance = 150m;
             var sut = new Account();
 
             // Act

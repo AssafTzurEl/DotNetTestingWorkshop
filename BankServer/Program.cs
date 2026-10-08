@@ -17,7 +17,7 @@ namespace BankServer
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
-            builder.Services.AddScoped<IAccountRepository, InMemoryAccountRepository>();
+            builder.Services.AddSingleton<IAccountRepository, InMemoryAccountRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddSingleton<IAccountNotifier, LoggingAccountNotifier>();
 

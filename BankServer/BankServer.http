@@ -1,0 +1,32 @@
+# Manual checks against the running server (F5 first). Each request uses the account
+# created by the first one.
+
+@BankServer_HostAddress = http://localhost:5181
+
+# @name create
+POST {{BankServer_HostAddress}}/account
+Content-Type: application/json
+
+{
+  "name": "Assaf"
+}
+
+###
+
+GET {{BankServer_HostAddress}}/account/{{create.response.body.$.id}}
+
+###
+
+GET {{BankServer_HostAddress}}/account
+
+###
+
+PATCH {{BankServer_HostAddress}}/account/{{create.response.body.$.id}}/credit/100
+
+###
+
+PATCH {{BankServer_HostAddress}}/account/{{create.response.body.$.id}}/charge/30
+
+###
+
+DELETE {{BankServer_HostAddress}}/account/{{create.response.body.$.id}}

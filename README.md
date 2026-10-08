@@ -39,3 +39,8 @@ Each phase is a tag. To see a phase, check it out – for example `git switch --
 
 - API tests: the running service, through HTTP, with `WebApplicationFactory`
 - Fix the boundary bug found in phase 6
+
+## phase-8
+
+- Fix the wiring bug found in phase 7
+- `BankServer.http`: manual checks against the running server, next to the automated tests

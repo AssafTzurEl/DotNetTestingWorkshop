@@ -1,15 +1,21 @@
 using AwesomeAssertions;
 using BankServer.Exceptions;
 using BankServer.Model;
+using BankServer.Notifications;
 using BankServer.Repositories;
 using BankServer.Services;
+using FakeItEasy;
 
 namespace BankServer.Tests
 {
     public class AccountServiceTests
     {
-        private static AccountService CreateSut() =>
-            new AccountService(new InMemoryAccountRepository());
+        private static AccountService CreateSut(
+            IAccountRepository? repository = null,
+            IAccountNotifier? notifier = null) =>
+            new AccountService(
+                repository ?? new InMemoryAccountRepository(),
+                notifier ?? A.Fake<IAccountNotifier>());
 
         [Fact]
         public void Add_NewAccount_AssignsId()
@@ -81,6 +87,61 @@ namespace BankServer.Tests
             // Assert
             Action act = () => sut.Get(account.Id);
             act.Should().Throw<EntityNotFoundException>();
+        }
+
+        [Fact]
+        public void Charge_CrossesBlockingThreshold_NotifiesOnce()
+        {
+            // Arrange
+            const decimal AmountBeyondThreshold = 5_000.01m;
+            var notifier = A.Fake<IAccountNotifier>();
+            var sut = CreateSut(notifier: notifier);
+            var account = sut.Add(new Account());
+
+            // Act
+            sut.Charge(account.Id, AmountBeyondThreshold);
+
+            // Assert
+            A.CallTo(() => notifier.NotifyBlocked(account.Id))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void Charge_DownToThresholdExactly_DoesNotNotify()
+        {
+            // Arrange
+            const decimal AmountToThreshold = 5_000m;
+            var notifier = A.Fake<IAccountNotifier>();
+            var sut = CreateSut(notifier: notifier);
+            var account = sut.Add(new Account());
+
+            // Act
+            sut.Charge(account.Id, AmountToThreshold);
+
+            // Assert
+            A.CallTo(() => notifier.NotifyBlocked(A<int>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Charge_RepositoryFails_DoesNotNotify()
+        {
+            // Arrange
+            const int AccountId = 1;
+            const decimal Amount = 100m;
+            var repository = A.Fake<IAccountRepository>();
+            A.CallTo(() => repository.Charge(A<int>._, A<decimal>._))
+                .Throws(new TimeoutException());
+            var notifier = A.Fake<IAccountNotifier>();
+            var sut = CreateSut(repository, notifier);
+
+            // Act
+            Action act = () => sut.Charge(AccountId, Amount);
+
+            // Assert
+            act.Should().Throw<TimeoutException>();
+            A.CallTo(() => notifier.NotifyBlocked(A<int>._))
+                .MustNotHaveHappened();
         }
     }
 }

@@ -1,4 +1,5 @@
 using BankServer.Controllers;
+using BankServer.Notifications;
 using BankServer.Repositories;
 using BankServer.Services;
 
@@ -18,6 +19,7 @@ namespace BankServer
 
             builder.Services.AddScoped<IAccountRepository, InMemoryAccountRepository>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddSingleton<IAccountNotifier, LoggingAccountNotifier>();
 
             var app = builder.Build();
 

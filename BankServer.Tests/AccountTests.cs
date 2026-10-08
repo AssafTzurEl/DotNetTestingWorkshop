@@ -1,4 +1,5 @@
 using AwesomeAssertions;
+using BankServer.Exceptions;
 using BankServer.Model;
 
 namespace BankServer.Tests
@@ -114,6 +115,22 @@ namespace BankServer.Tests
 
             // Assert
             act.Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void Charge_BlockedAccount_Throws()
+        {
+            // Arrange
+            const decimal AmountBeyondThreshold = 5_000.01m;
+            const decimal Amount = 1m;
+            var sut = new Account();
+            sut.Charge(AmountBeyondThreshold);
+
+            // Act
+            Action act = () => sut.Charge(Amount);
+
+            // Assert
+            act.Should().Throw<AccountBlockedException>();
         }
 
         // Nobody defined what Credit should do when the balance would overflow.

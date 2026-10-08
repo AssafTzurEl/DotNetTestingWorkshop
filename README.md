@@ -28,3 +28,9 @@ Each phase is a tag. To see a phase, check it out – for example `git switch --
 
 - Unit tests for `AccountService`
 - Shared setup: from repeated Arrange, through constructor + `IDisposable`, to a `CreateSut()` helper
+
+## phase-6
+
+- A new dependency: `IAccountNotifier`, called when a charge blocks an account
+- Test doubles with FakeItEasy: a fake (in-memory repository), a stub (a failing repository) and a mock (the notifier)
+- A boundary test that finds another bug

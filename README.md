@@ -34,3 +34,8 @@ Each phase is a tag. To see a phase, check it out – for example `git switch --
 - A new dependency: `IAccountNotifier`, called when a charge blocks an account
 - Test doubles with FakeItEasy: a fake (in-memory repository), a stub (a failing repository) and a mock (the notifier)
 - A boundary test that finds another bug
+
+## phase-7
+
+- API tests: the running service, through HTTP, with `WebApplicationFactory`
+- Fix the boundary bug found in phase 6

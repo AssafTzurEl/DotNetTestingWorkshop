@@ -18,7 +18,7 @@ namespace BankServer.Model
         /// A blocked account can't be charged. Crediting is still allowed –
         /// that's how the owner gets unblocked.
         /// </summary>
-        public bool IsBlocked => _balance <= BlockingThreshold;
+        public bool IsBlocked => _balance < BlockingThreshold;
 
         public decimal Credit(decimal amount)
         {
